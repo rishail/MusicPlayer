@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">MusicPlayer</string>
+    <string name="app_icon">app icon</string>
+    <string name="splash_icon_top">Splash Icon Top</string>
+    <string name="app_name_text">App Name Text</string>
+    <string name="custom_drawer_ic">Custom Drawer</string>
+    <string name="premium_icon">Premium Icon</string>
+    <string name="remove_ads">Remove Ads</string>
+    <string name="our_apps">Our Apps(Ad)</string>
+    <string name="give_rating">Give Us Rating</string>
+    <string name="your_feedback">Your Feedback</string>
+    <string name="terms_privacy"><![CDATA[Terms & Privacy]]></string>
+    <string name="app_update">App Update</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+    <string name="premium_screen_icon">Premium Screen Icon</string>
+    <string name="get_premium">Get Premium</string>
+    <string name="premium_screen_wave">Premium Screen Wave</string>
+    <string name="premium_screen_text_features">Premium Screen Text Features</string>
+    <string name="premium_screen_remove_ads">Remove Ads</string>
+    <string name="premium_screen_premium_player">Premium Player</string>
+    <string name="premium_screen_cross_fade">Cross Fade</string>
+    <string name="future_pro_features">Future Pro Features</string>
+    <string name="monthly_subscription_premium_screen">Monthly Subscription</string>
+    <string name="ten_per_off_premium_screen">10% Off</string>
+    <string name="two_sixty_monthly">$260</string>
+    <string name="per_month">Per Month</string>
+    <string name="yearly_subscription_premium_screen">Yearly Subscription</string>
+    <string name="fifty_per_off_premium_screen">50% Off</string>
+    <string name="per_year">Per Year</string>
+    <string name="five_hundred_yearly">$500</string>
+    <string name="life_time_purchase">Life Time Purchase</string>
+    <string name="thirty_per_off_premium_screen">30% Off</string>
+    <string name="one_time_lifetime">One Time</string>
+    <string name="twelve_hundred">$1200</string>
+    <string name="btn_premium_screen">Continue</string>
+    <string name="premium_sheet_cross_btn">Premium Screen Close Button</string>
+    <string name="tab_layout_label_songs">Songs</string>
+    <string name="tab_layout_folders_name">Folders</string>
+    <string name="music_art">Music Art</string>
+    <string name="song_name">Song Name</string>
+    <string name="artist_name">Artist Name</string>
+    <string name="song_thumbnail">Song Thumbnail</string>
+    <string name="music_playing_animation">Music Playing Animation</string>
+    <string name="song_menu_options">Song Menu Options</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>
