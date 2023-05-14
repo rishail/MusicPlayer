@@ -29,7 +29,6 @@ class PremiumScreenBottomSheet : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View {
         binding = PremiumScreenBottomSheetBinding.inflate(inflater, container, false)
 
-
         binding.btnPremiumScreen.setOnClickListener {
             Toast.makeText(context,"Premium Screen Button is pressed",Toast.LENGTH_SHORT).show()
         }
@@ -40,7 +39,6 @@ class PremiumScreenBottomSheet : BottomSheetDialogFragment() {
 
         super.onViewCreated(view, savedInstanceState)
         val behavior = BottomSheetBehavior.from(view.parent as View)
-
         dialog!!.setCanceledOnTouchOutside(false)
         dialog!!.setCancelable(false)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED

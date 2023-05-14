@@ -19,7 +19,7 @@ class SongsListFragment : Fragment(),SongsOptions {
 
         binding = FragmentSongsListBinding.inflate(inflater, container, false)
 
-        adapter= SongsListAdapter(DashboardFragment.songList,this)
+        adapter= SongsListAdapter(DashboardFragment.songList,this,context!!)
         binding.songListRecycler.layoutManager = LinearLayoutManager(context)
         binding.songListRecycler.adapter = adapter
 

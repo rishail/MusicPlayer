@@ -1,5 +1,10 @@
 package com.example.musicplayer
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ContentUris
+import android.database.Cursor
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -9,32 +14,43 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.musicplayer.Constants.TAG
 import com.example.musicplayer.databinding.FragmentDashboardBinding
+import com.example.musicplayer.databinding.SongListAdapterBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import java.util.concurrent.TimeUnit
 
 
 class DashboardFragment : Fragment() {
+
+    private val songListAdapterBinding by lazy{
+        SongListAdapterBinding.inflate(layoutInflater)
+    }
 
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var  actionBarDrawerToggle: ActionBarDrawerToggle
 
+
     companion object{
 
         var songList = ArrayList<Music>()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View {
+    @RequiresApi(Build.VERSION_CODES.Q)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
         binding=FragmentDashboardBinding.inflate(inflater,container,false)
+
 
         viewPagerAdapter = ViewPagerAdapter(requireActivity())
         binding.viewPager.adapter = viewPagerAdapter
@@ -72,9 +88,10 @@ class DashboardFragment : Fragment() {
 
             header.findViewById<Button>(R.id.btn_remove_ads).setOnClickListener {
 
-                PremiumScreenBottomSheet()
+               showBottomSheetPremium()
 
             }
+
 
             header.findViewById<Button>(R.id.btn_our_apps).setOnClickListener {
 
@@ -107,10 +124,14 @@ class DashboardFragment : Fragment() {
             showBottomSheetPremium()
         }
 
-        getMusicList()
+
+       ActivityCompat.requestPermissions(activity!!,permissionsHandler(),1)
+      getMusicList()
 
         return binding.root
     }
+
+
 
     private fun showBottomSheetPremium(){
 
@@ -119,41 +140,113 @@ class DashboardFragment : Fragment() {
         bottomSheet.show(activity!!.supportFragmentManager,bottomSheet.tag)
     }
 
-    private fun getMusicList(){
+//    val permissionsLauncher=registerForActivityResult(ActivityResultContracts.RequestPermission()) {isGranted->
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//
+//            val result = context!!.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+//
+//
+//        }
+//    }
 
-        val contentResolver =context?.contentResolver
-        val selection = "${MediaStore.Audio.Media.TITLE} >= ?"
-        val selectionArgs = arrayOf(
-            TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS).toString())
-        val sortOrder = "${MediaStore.Audio.Media.DISPLAY_NAME} ASC"
-        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
-            }
-            else {
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-            }
 
-        val cursor = contentResolver?.query(collection, null, selection, selectionArgs, sortOrder)
-        if (cursor != null && cursor.count > 0 ) {
 
-            val id = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-            val title =cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-            val artist=cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
 
-            while (cursor.moveToNext()) {
+    var storagePermissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
 
-                val id = cursor.getInt(id)
-                val title=cursor.getString(title)
-                val artist=cursor.getString(artist)
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    var storagePermissions13 = arrayOf(Manifest.permission.READ_MEDIA_AUDIO)
 
-                val music = Music(id,title,artist)
-                songList.add(music)
-
-                Log.d(TAG, "music list$music")
-
-            }
-            cursor.close()
+    private fun permissionsHandler(): Array<String> {
+        val p: Array<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            storagePermissions13
+        } else {
+            storagePermissions
         }
+        return p
     }
+
+
+      @SuppressLint("Range")
+      private  fun getMusicList(){
+
+          val cr = activity!!.contentResolver
+          val collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+          val selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0"
+          val sortOrder = "${MediaStore.Audio.Media.DISPLAY_NAME} ASC"
+          val cursor: Cursor? = cr.query(collection, null, selection, null, sortOrder)
+          val count: Int
+
+          if (cursor != null) {
+              count = cursor.count
+              if (count > 0) {
+                  while (cursor.moveToNext()) {
+                      val id= cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID))
+                      val title=cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+                      val artist=cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+                      val albumId =cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
+
+                      val sArt= Uri.parse("content://media/external/audio/albumart")
+            val uri = ContentUris.withAppendedId(sArt,albumId)
+
+                      val music=Music(id,title,artist,albumId,uri)
+                      songList.add(music)
+
+                      Glide.with(context!!).load(uri).placeholder(R.drawable.music_art).error(R.drawable.music_art).into(songListAdapterBinding.songThumbnail)
+
+                      Log.d(TAG, "music list$music")
+                  }
+              }
+              cursor.close()
+          }
+
+      }
+
+//    @SuppressLint("Range")
+//    @RequiresApi(Build.VERSION_CODES.Q)
+//    private fun getMusicList(){
+//
+//        val contentResolver =context?.contentResolver
+//        val selection = "${MediaStore.Audio.Media.TITLE} >= ?"
+//        val selectionArgs = arrayOf(TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS).toString())
+//        val sortOrder = "${MediaStore.Audio.Media.DISPLAY_NAME} ASC"
+//        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
+//            }
+//            else {
+//                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+//            }
+//
+//        val cursor = contentResolver?.query(collection, null, selection, selectionArgs, sortOrder)
+//        if (cursor != null && cursor.count > 0 ) {
+//
+//            val id = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+//            val title =cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+//            val artist=cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+//            val albumId =cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Albums._ID))
+//
+//
+//           val sArt= Uri.parse("content://media/external/audio/albumart")
+//            val uri = ContentUris.withAppendedId(sArt, albumId.toLong())
+//
+//           Glide.with(context!!).load(uri).into(songListAdapterBinding.songThumbnail)
+//
+//            while (cursor.moveToNext()) {
+//
+//                val id = cursor.getInt(id)
+//                val title=cursor.getString(title)
+//                val artist=cursor.getString(artist)
+//                val albumId=cursor.getInt(albumId.toInt())
+//
+//                val music = Music(id,title,artist,albumId)
+//                songList.add(music)
+//
+//                Log.d(TAG, "music list$music")
+//            }
+//            cursor.close()
+//        }
+//    }
+
 
 }
