@@ -2,6 +2,6 @@ package com.example.musicplayer
 
 object Constants {
 
-    val TAG="1234"
+    const val TAG="1234"
 
 }

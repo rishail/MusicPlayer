@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/dashboardFragment">
+    app:startDestination="@id/dashboard_fragment">
 
     <fragment
-        android:id="@+id/dashboardFragment"
-        android:name="com.example.musicplayer.DashboardFragment"
-        android:label="DashboardFragment" />
+      android:id="@+id/dashboard_fragment"
+      android:name="com.example.musicplayer.DashboardFragment"
+        android:label="DashboardFragment"
+        tools:layout="@layout/fragment_dashboard">
+
+
+        <action
+            android:id="@+id/action_dashboard_fragment_to_songsByFolderFragment"
+            app:destination="@id/songsByFolderFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/songsByFolderFragment"
+        android:name="com.example.musicplayer.SongsByFolderFragment"
+        android:label="fragment_songs_by_folder"
+        tools:layout="@layout/fragment_songs_by_folder" />
+
+
 </navigation>

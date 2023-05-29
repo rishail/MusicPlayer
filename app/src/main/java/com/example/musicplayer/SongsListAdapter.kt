@@ -4,11 +4,13 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.graphics.get
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.musicplayer.databinding.FragmentSongsListBinding
 import com.example.musicplayer.databinding.SongListAdapterBinding
 
 class SongsListAdapter(
@@ -17,8 +19,8 @@ class SongsListAdapter(
     private val options: SongsOptions,
     private val context:Context,
 
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -27,6 +29,7 @@ class SongsListAdapter(
 
         return ItemViewHolder(binding)
     }
+
 
     override fun getItemCount(): Int {
 
@@ -37,11 +40,15 @@ class SongsListAdapter(
 
     }
 
+
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder as ItemViewHolder
 
         holder.binding.songName.text=songsListAdapter[position].title
         holder.binding.artistName.text=songsListAdapter[position].artist
+
+
 
         Glide.with(context)
             .load(songsListAdapter[position].uri).placeholder(R.drawable.music_art).error(R.drawable.music_art)
@@ -60,6 +67,7 @@ class SongsListAdapter(
         }
 
     }
+
 
 }
 

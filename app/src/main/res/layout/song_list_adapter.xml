@@ -9,7 +9,7 @@
         android:id="@+id/song_thumbnail"
         android:layout_width="@dimen/_35sdp"
         android:layout_height="@dimen/_35sdp"
-        android:background="@drawable/music_art_background"
+        android:background="@drawable/music_and_folder_art_background"
         android:contentDescription="@string/song_thumbnail"
         android:src="@drawable/music_art"
         app:layout_constraintBottom_toBottomOf="parent"
