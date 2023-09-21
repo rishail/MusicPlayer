@@ -10,18 +10,20 @@
       android:name="com.example.musicplayer.DashboardFragment"
         android:label="DashboardFragment"
         tools:layout="@layout/fragment_dashboard">
-
-
         <action
             android:id="@+id/action_dashboard_fragment_to_songsByFolderFragment"
             app:destination="@id/songsByFolderFragment" />
+
+
     </fragment>
 
     <fragment
         android:id="@+id/songsByFolderFragment"
         android:name="com.example.musicplayer.SongsByFolderFragment"
         android:label="fragment_songs_by_folder"
-        tools:layout="@layout/fragment_songs_by_folder" />
+        tools:layout="@layout/fragment_songs_by_folder" >
+
+    </fragment>
 
 
 </navigation>

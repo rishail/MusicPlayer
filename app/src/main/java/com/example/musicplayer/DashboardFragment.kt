@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,9 +22,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.example.musicplayer.Constants.TAG
+import com.example.musicplayer.databinding.FoldersListAdapterBinding
 import com.example.musicplayer.databinding.FragmentDashboardBinding
+import com.example.musicplayer.databinding.FragmentFoldersListBinding
 import com.example.musicplayer.databinding.SongListAdapterBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -36,9 +40,13 @@ class DashboardFragment : Fragment() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var  actionBarDrawerToggle: ActionBarDrawerToggle
 
+
     private val songListAdapterBinding by lazy {
         SongListAdapterBinding.inflate(layoutInflater)
     }
+
+
+
     companion object{
 
         var songList = ArrayList<Music>()
@@ -48,6 +56,7 @@ class DashboardFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+
 
         binding=FragmentDashboardBinding.inflate(inflater,container,false)
 
@@ -127,9 +136,13 @@ class DashboardFragment : Fragment() {
         permissionRequestLauncher.launch(permissionsHandler())
 
 
+
+
         return binding.root
 
     }
+
+
 
 
     private fun showBottomSheetPremium(){
@@ -174,7 +187,6 @@ class DashboardFragment : Fragment() {
     @SuppressLint("Range")
     fun getMusicList() {
 
-        val tempFoldersList=ArrayList<String>()
         val cr = context?.contentResolver
         val collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0"
@@ -193,17 +205,6 @@ class DashboardFragment : Fragment() {
                         cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
                     val albumId =
                         cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
-                    val foldersId=
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.BUCKET_ID))
-                    val foldersName=
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.BUCKET_DISPLAY_NAME))
-
-                     if (!tempFoldersList.contains(foldersName)){
-                         tempFoldersList.add(foldersName)
-                         val folders=Folders(foldersId,foldersName)
-                         foldersList.add(folders)
-                         Log.d(TAG,"folders list$folders")
-                     }
 
                     val sArt = Uri.parse("content://media/external/audio/albumart")
                     val uri = ContentUris.withAppendedId(sArt, albumId)
@@ -215,7 +216,7 @@ class DashboardFragment : Fragment() {
                     Glide.with(this).load(uri).placeholder(R.drawable.music_art)
                         .error(R.drawable.music_art).into(songListAdapterBinding.songThumbnail)
 
-                    Log.d(TAG, "music list$music")
+//                    Log.d(TAG, "music list$music")
                 }
             }
             cursor.close()

@@ -1,7 +1,5 @@
 package com.example.musicplayer
 
-
-
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.databinding.FragmentSongsListBinding
-import com.example.musicplayer.databinding.SongListAdapterBinding
 
 
 class SongsListFragment : Fragment(),SongsOptions {
@@ -38,7 +35,6 @@ class SongsListFragment : Fragment(),SongsOptions {
 
         val spacingItems = RecyclerViewSpacingItems(95)
         binding.songListRecycler.addItemDecoration(spacingItems)
-
 
 
         return binding.root
@@ -73,8 +69,6 @@ class SongsListFragment : Fragment(),SongsOptions {
 
     override fun share(music: Music, position: Int) {
     }
-
-
 
 
 

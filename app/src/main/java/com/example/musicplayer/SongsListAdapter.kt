@@ -1,26 +1,20 @@
 package com.example.musicplayer
 
 import android.content.Context
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.core.graphics.get
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.musicplayer.databinding.FragmentSongsListBinding
 import com.example.musicplayer.databinding.SongListAdapterBinding
 
 class SongsListAdapter(
 
     private var songsListAdapter: ArrayList<Music>,
-    private val options: SongsOptions,
+    private val options: SongsListFragment,
     private val context:Context,
 
 
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

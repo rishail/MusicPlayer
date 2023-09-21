@@ -2,6 +2,7 @@ package com.example.musicplayer
 
 interface FoldersOptions {
 
+
     fun itemClicked(folders: Folders, position:Int)
 
     fun menuItemClicked(folders: Folders, position:Int)
