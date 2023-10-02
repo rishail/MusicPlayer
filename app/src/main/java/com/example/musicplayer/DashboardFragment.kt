@@ -51,6 +51,7 @@ class DashboardFragment : Fragment() {
 
         var songList = ArrayList<Music>()
         var foldersList=ArrayList<Folders>()
+        var songsByFolders=ArrayList<SongsByFolder>()
     }
 
 

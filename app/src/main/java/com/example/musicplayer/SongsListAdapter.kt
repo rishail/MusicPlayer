@@ -2,10 +2,12 @@ package com.example.musicplayer
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicplayer.databinding.SongListAdapterBinding
+
 
 class SongsListAdapter(
 
@@ -15,6 +17,8 @@ class SongsListAdapter(
 
 
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+     private var selectedItem = -1
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -30,7 +34,17 @@ class SongsListAdapter(
         return songsListAdapter.size
     }
 
-    class ItemViewHolder(val binding: SongListAdapterBinding) : RecyclerView.ViewHolder(binding.root) {
+  inner class ItemViewHolder(val binding: SongListAdapterBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: Music, isSelected:Boolean){
+            itemView.isSelected=isSelected
+        }
+
+        fun selectItem(position: Int){
+
+            selectedItem=position
+            notifyItemChanged(position)
+        }
 
     }
 
@@ -41,6 +55,8 @@ class SongsListAdapter(
 
         holder.binding.songName.text=songsListAdapter[position].title
         holder.binding.artistName.text=songsListAdapter[position].artist
+
+        holder.bind(songsListAdapter[position], position == selectedItem)
 
 
 
@@ -61,6 +77,7 @@ class SongsListAdapter(
         }
 
     }
+
 
 
 }

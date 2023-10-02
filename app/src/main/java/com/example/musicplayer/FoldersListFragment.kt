@@ -88,8 +88,6 @@ class FoldersListFragment : Fragment(),FoldersOptions {
 
 
 
-
-
     override fun itemClicked(folders: Folders, position: Int) {
 
          findNavController().navigate(R.id.action_dashboard_fragment_to_songsByFolderFragment)

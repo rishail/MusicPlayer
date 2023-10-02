@@ -37,16 +37,15 @@ class SongsListFragment : Fragment(),SongsOptions {
         binding.songListRecycler.addItemDecoration(spacingItems)
 
 
+
         return binding.root
     }
 
 
 
-
-
     override fun itemClicked(music: Music, position: Int) {
 
-        Toast.makeText(context,"Item is Clicked",Toast.LENGTH_SHORT).show()
+   
 
     }
 
