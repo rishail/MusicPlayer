@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.databinding.FragmentSongsListBinding
 
 
-class SongsListFragment : Fragment(),SongsOptions {
+class SongsListFragment : Fragment(),SongsCallBack {
 
  private lateinit var binding: FragmentSongsListBinding
     private var adapter: SongsListAdapter? = null
@@ -37,36 +37,36 @@ class SongsListFragment : Fragment(),SongsOptions {
         binding.songListRecycler.addItemDecoration(spacingItems)
 
 
-
         return binding.root
     }
 
 
 
-    override fun itemClicked(music: Music, position: Int) {
+    override fun itemClicked(musicModel: MusicModel, position: Int) {
 
-   
 
     }
 
-    override fun menuItemClicked(music: Music, position: Int) {
+    override fun menuItemClicked(musicModel: MusicModel, position: Int) {
 
         Toast.makeText(context,"Menu Item is Clicked",Toast.LENGTH_SHORT).show()
     }
 
-    override fun rename(music: Music, position: Int) {
+    override fun rename(musicModel: MusicModel, position: Int) {
 
     }
 
-    override fun delete(music: Music, position: Int) {
+    override fun delete(musicModel: MusicModel, position: Int) {
 
     }
 
-    override fun setRingTone(music: Music, position: Int) {
+    override fun setRingTone(musicModel: MusicModel, position: Int) {
 
     }
 
-    override fun share(music: Music, position: Int) {
+    override fun share(musicModel: MusicModel, position: Int) {
+
+
     }
 
 

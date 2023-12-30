@@ -7,9 +7,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,12 +20,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
-import com.example.musicplayer.Constants.TAG
-import com.example.musicplayer.databinding.FoldersListAdapterBinding
 import com.example.musicplayer.databinding.FragmentDashboardBinding
-import com.example.musicplayer.databinding.FragmentFoldersListBinding
 import com.example.musicplayer.databinding.SongListAdapterBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -45,12 +39,10 @@ class DashboardFragment : Fragment() {
         SongListAdapterBinding.inflate(layoutInflater)
     }
 
-
-
     companion object{
 
-        var songList = ArrayList<Music>()
-        var foldersList=ArrayList<Folders>()
+        var songList = ArrayList<MusicModel>()
+        var foldersModelList=ArrayList<FoldersModel>()
         var songsByFolders=ArrayList<SongsByFolder>()
     }
 
@@ -137,13 +129,9 @@ class DashboardFragment : Fragment() {
         permissionRequestLauncher.launch(permissionsHandler())
 
 
-
-
         return binding.root
 
     }
-
-
 
 
     private fun showBottomSheetPremium(){
@@ -211,101 +199,17 @@ class DashboardFragment : Fragment() {
                     val uri = ContentUris.withAppendedId(sArt, albumId)
 
 
-                    val music = Music(id, title, artist, albumId, uri)
-                    songList.add(music)
+                    val musicModel = MusicModel(id, title, artist, albumId, uri)
+                    songList.add(musicModel)
 
                     Glide.with(this).load(uri).placeholder(R.drawable.music_art)
                         .error(R.drawable.music_art).into(songListAdapterBinding.songThumbnail)
-
-//                    Log.d(TAG, "music list$music")
                 }
             }
             cursor.close()
         }
 
     }
-
-
-
-
-
-
-//    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-//            result: ActivityResult ->
-//        if (result.resultCode == Activity.RESULT_OK) {
-//            getMusicList()
-//        }
-//        else{
-//            permissionsHandler()
-//        }
-//    }
-
-
-//    private  var permissionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-//
-//
-//        if (result.resultCode == Activity.RESULT_OK){
-//            getMusicList()
-//        }
-//        else{
-//          Toast.makeText(context,"Permission denied",Toast.LENGTH_SHORT).show()
-//        }
-//    }
-
-
-
-
-
-
-
-
-
-//    @SuppressLint("Range")
-//    @RequiresApi(Build.VERSION_CODES.Q)
-//    private fun getMusicList(){
-//
-//        val contentResolver =context?.contentResolver
-//        val selection = "${MediaStore.Audio.Media.TITLE} >= ?"
-//        val selectionArgs = arrayOf(TimeUnit.MILLISECONDS.convert(2, TimeUnit.SECONDS).toString())
-//        val sortOrder = "${MediaStore.Audio.Media.DISPLAY_NAME} ASC"
-//        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
-//            }
-//            else {
-//                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-//            }
-//
-//        val cursor = contentResolver?.query(collection, null, selection, selectionArgs, sortOrder)
-//        if (cursor != null && cursor.count > 0 ) {
-//
-//            val id = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-//            val title =cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-//            val artist=cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
-//            val albumId =cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Albums._ID))
-//
-//
-//           val sArt= Uri.parse("content://media/external/audio/albumart")
-//            val uri = ContentUris.withAppendedId(sArt, albumId.toLong())
-//
-//           Glide.with(context!!).load(uri).into(songListAdapterBinding.songThumbnail)
-//
-//            while (cursor.moveToNext()) {
-//
-//                val id = cursor.getInt(id)
-//                val title=cursor.getString(title)
-//                val artist=cursor.getString(artist)
-//                val albumId=cursor.getInt(albumId.toInt())
-//
-//                val music = Music(id,title,artist,albumId)
-//                songList.add(music)
-//
-//                Log.d(TAG, "music list$music")
-//            }
-//            cursor.close()
-//        }
-//    }
-
-
 }
 
 

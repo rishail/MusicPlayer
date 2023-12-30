@@ -3,11 +3,9 @@ package com.example.musicplayer
 
 import android.annotation.SuppressLint
 import android.database.Cursor
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.databinding.FragmentFoldersListBinding
 
 
-class FoldersListFragment : Fragment(),FoldersOptions {
+class FoldersListFragment : Fragment(),FoldersCallBack {
 
     private lateinit var binding: FragmentFoldersListBinding
     private var adapter: FoldersListAdapter? = null
@@ -27,7 +25,7 @@ class FoldersListFragment : Fragment(),FoldersOptions {
 
     override fun onResume() {
         super.onResume()
-        binding.foldersListRecycler.adapter = FoldersListAdapter(DashboardFragment.foldersList,this)
+        binding.foldersListRecycler.adapter = FoldersListAdapter(DashboardFragment.foldersModelList,this)
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -35,7 +33,7 @@ class FoldersListFragment : Fragment(),FoldersOptions {
         binding = FragmentFoldersListBinding.inflate(inflater, container, false)
 
 
-        adapter= FoldersListAdapter(DashboardFragment.foldersList,this)
+        adapter= FoldersListAdapter(DashboardFragment.foldersModelList,this)
 
 
         binding.foldersListRecycler.adapter = adapter
@@ -74,8 +72,8 @@ class FoldersListFragment : Fragment(),FoldersOptions {
 
                     if (!tempFoldersList.contains(foldersName)){
                         tempFoldersList.add(foldersName)
-                        val folders=Folders(foldersId,foldersName)
-                        DashboardFragment.foldersList.add(folders)
+                        val foldersModel=FoldersModel(foldersId,foldersName)
+                        DashboardFragment.foldersModelList.add(foldersModel)
 //                        Log.d(Constants.TAG,"folders list$folders")
                     }
                 }
@@ -88,21 +86,21 @@ class FoldersListFragment : Fragment(),FoldersOptions {
 
 
 
-    override fun itemClicked(folders: Folders, position: Int) {
+    override fun itemClicked(foldersModel: FoldersModel, position: Int) {
 
          findNavController().navigate(R.id.action_dashboard_fragment_to_songsByFolderFragment)
 
     }
 
-    override fun menuItemClicked(folders: Folders, position: Int) {
+    override fun menuItemClicked(foldersModel: FoldersModel, position: Int) {
 
         Toast.makeText(context,"Menu Item is Clicked",Toast.LENGTH_SHORT).show()
     }
 
-    override fun rename(folders: Folders, position: Int) {
+    override fun rename(foldersModel: FoldersModel, position: Int) {
     }
 
-    override fun delete(folders: Folders, position: Int) {
+    override fun delete(foldersModel: FoldersModel, position: Int) {
     }
 
 

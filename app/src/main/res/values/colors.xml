@@ -13,5 +13,6 @@
     <color name="item_selected_drawer">#FA8C00</color>
     <color name="artist_name_color">#9387AA</color>
     <color name="item_selected_recycler">#4C3A71</color>
+    <color name="item_name_highlighter">#B57DF0</color>
 
 </resources>

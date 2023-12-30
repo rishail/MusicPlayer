@@ -9,7 +9,7 @@ import com.example.musicplayer.databinding.SongsByFolderAdapterBinding
 
 class SongsByFolderAdapter(
 
-    private var songsByFolderAdapter: ArrayList<Music>,
+    private var songsByFolderAdapter: ArrayList<MusicModel>,
     private val options: SongsByFolderFragment,
     private val context: Context,
 
