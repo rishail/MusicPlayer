@@ -1,6 +1,8 @@
 package com.example.musicplayer
 
-import android.content.Context
+import android.annotation.SuppressLint
+import android.content.ContentUris
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -10,22 +12,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.databinding.FragmentSongsByFolderBinding
+import java.io.File
 
-
-class SongsByFolderFragment : Fragment(),SongsCallBack {
+class SongsByFolderFragment : Fragment(),SongsByFolderCallBack {
 
     private lateinit var binding:FragmentSongsByFolderBinding
     private var adapter: SongsByFolderAdapter? = null
 
+    private val args:SongsByFolderFragmentArgs by navArgs()
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
      binding=FragmentSongsByFolderBinding.inflate(inflater, container, false)
 
-        adapter= SongsByFolderAdapter(DashboardFragment.songList,this,context!!)
+        adapter= SongsByFolderAdapter(ArrayList(),this,requireContext())
 
         binding.songsbyfolderrecycler.adapter = adapter
         binding.songsbyfolderrecycler.layoutManager = LinearLayoutManager(context)
@@ -33,58 +37,73 @@ class SongsByFolderFragment : Fragment(),SongsCallBack {
         val spacingItems = RecyclerViewSpacingItems(95)
         binding.songsbyfolderrecycler.addItemDecoration(spacingItems)
 
-        getSongsByFolder(context!!)
+              val position=args
+
+               DashboardFragment.SongsByFolderList=getSongsByFolder(DashboardFragment.foldersList[position.data].id)
+
+               adapter?.updateData(DashboardFragment.SongsByFolderList)
 
         return binding.root
     }
 
-    private fun getSongsByFolder(context: Context) {
-        val tempAudioList: MutableList<SongsByFolder> = DashboardFragment.songsByFolders
-        val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+    @SuppressLint("InlinedApi", "Recycle", "Range")
+    private fun getSongsByFolder(folderId: String): ArrayList<SongsByFolderModel>{
+        val tempList = ArrayList<SongsByFolderModel>()
+        val selection = MediaStore.Audio.Media.BUCKET_ID + " like? "
         val projection = arrayOf(
-            MediaStore.Audio.AudioColumns.DATA,
-            MediaStore.Audio.AudioColumns.TITLE,
-            MediaStore.Audio.AudioColumns.ALBUM,
-            MediaStore.Audio.ArtistColumns.ARTIST
-        )
-        val c = context.contentResolver.query(uri,projection,MediaStore.Audio.Media.DATA + " like ? ",arrayOf("%utm%"),null)
-        if (c != null) {
-            while (c.moveToNext()) {
+            MediaStore.Audio.Media._ID, 
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.ALBUM_ID,
+            MediaStore.Audio.Media.BUCKET_ID,
+            MediaStore.Audio.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Audio.Media.DATA,
+          )
+        val cursor = requireActivity().contentResolver.query(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection, arrayOf(folderId),
+            DashboardFragment.sortList[DashboardFragment.sortValue])
+        if(cursor != null)
+            if(cursor.moveToNext())
+                do {
+                    val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID))
+                    val title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+                    val artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+                    val albumId = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
+                    val foldersName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.BUCKET_DISPLAY_NAME))
+                    val path= cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
 
-                val path = c.getString(0)
-                val title = c.getString(1)
-                val artist = c.getString(3)
+                    val sArt = Uri.parse("content://media/external/audio/albumart")
+                    val uri = ContentUris.withAppendedId(sArt,albumId)
 
-                val audioModel = SongsByFolder(path,title,artist)
+                    try {
+                        val file = File(path)
+                        val songsByFolderModel=SongsByFolderModel(id,title,artist,albumId,uri,foldersName)
 
-                audioModel.title
-                audioModel.artist
-                audioModel.path
-                tempAudioList.add(audioModel)
+                        if(file.exists()) tempList.add(songsByFolderModel)
 
-                Log.d(Constants.TAG,audioModel.title)
-            }
-            c.close()
-        }
-
+                    }catch (_:Exception){}
+                }while (cursor.moveToNext())
+        cursor?.close()
+        return tempList
     }
 
-    override fun itemClicked(musicModel: MusicModel, position: Int) {
+
+    override fun itemClicked(songsByFolderModel: SongsByFolderModel, position: Int) {
     }
 
-    override fun menuItemClicked(musicModel: MusicModel, position: Int) {
+    override fun menuItemClicked(songsByFolderModel: SongsByFolderModel, position: Int) {
     }
 
-    override fun rename(musicModel: MusicModel, position: Int) {
+    override fun rename(songsByFolderModel: SongsByFolderModel, position: Int) {
     }
 
-    override fun delete(musicModel: MusicModel, position: Int) {
+    override fun delete(songsByFolderModel: SongsByFolderModel, position: Int) {
     }
 
-    override fun setRingTone(musicModel: MusicModel, position: Int) {
+    override fun setRingTone(songsByFolderModel: SongsByFolderModel, position: Int) {
     }
 
-    override fun share(musicModel: MusicModel, position: Int) {
+    override fun share(songsByFolderModel: SongsByFolderModel, position: Int) {
     }
 
 }

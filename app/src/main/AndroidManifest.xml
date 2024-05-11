@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.SplashScreen"
         tools:targetApi="33">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

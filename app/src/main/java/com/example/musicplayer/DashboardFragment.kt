@@ -34,22 +34,22 @@ class DashboardFragment : Fragment() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var  actionBarDrawerToggle: ActionBarDrawerToggle
 
-
-    private val songListAdapterBinding by lazy {
-        SongListAdapterBinding.inflate(layoutInflater)
-    }
-
     companion object{
 
         var songList = ArrayList<MusicModel>()
-        var foldersModelList=ArrayList<FoldersModel>()
-        var songsByFolders=ArrayList<SongsByFolder>()
+        var foldersList=ArrayList<FoldersModel>()
+        var SongsByFolderList=ArrayList<SongsByFolderModel>()
+        val sortList = arrayOf(
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.TITLE + " ASC",
+        )
+        var sortValue: Int = 0
     }
 
+    private val songListInstance=SongsListFragment()
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-
 
         binding=FragmentDashboardBinding.inflate(inflater,container,false)
 
@@ -82,7 +82,6 @@ class DashboardFragment : Fragment() {
             else {
                 drawerLayout.openDrawer(GravityCompat.START)
             }
-
 
 
             val header: View = binding.navHeaderDrawer.getHeaderView(0)
@@ -138,9 +137,8 @@ class DashboardFragment : Fragment() {
 
         val bottomSheet = PremiumScreenBottomSheet()
 
-        bottomSheet.show(activity!!.supportFragmentManager,bottomSheet.tag)
+        bottomSheet.show(requireActivity().supportFragmentManager,bottomSheet.tag)
     }
-
 
     private fun permissionsHandler(): Array<String> {
         val p: Array<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -154,6 +152,7 @@ class DashboardFragment : Fragment() {
 
     private var storagePermissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
 
+
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     var storagePermissions13 = arrayOf(Manifest.permission.READ_MEDIA_AUDIO)
 
@@ -166,50 +165,12 @@ class DashboardFragment : Fragment() {
             }
 
             if (allAreGranted) {
-                getMusicList()
+               songListInstance.getMusicList()
             } else {
                 Toast.makeText(context, "Permission is denied", Toast.LENGTH_SHORT).show()
             }
         }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    @SuppressLint("Range")
-    fun getMusicList() {
-
-        val cr = context?.contentResolver
-        val collection = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val selection = MediaStore.Audio.Media.IS_MUSIC + "!= 0"
-        val sortOrder = "${MediaStore.Audio.Media.DISPLAY_NAME} ASC"
-        val cursor: Cursor? = cr?.query(collection, null, selection, null, sortOrder)
-        val count: Int
-
-        if (cursor != null) {
-            count = cursor.count
-            if (count > 0) {
-                while (cursor.moveToNext()) {
-                    val id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media._ID))
-                    val title =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
-                    val artist =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
-                    val albumId =
-                        cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))
-
-                    val sArt = Uri.parse("content://media/external/audio/albumart")
-                    val uri = ContentUris.withAppendedId(sArt, albumId)
-
-
-                    val musicModel = MusicModel(id, title, artist, albumId, uri)
-                    songList.add(musicModel)
-
-                    Glide.with(this).load(uri).placeholder(R.drawable.music_art)
-                        .error(R.drawable.music_art).into(songListAdapterBinding.songThumbnail)
-                }
-            }
-            cursor.close()
-        }
-
-    }
 }
 
 

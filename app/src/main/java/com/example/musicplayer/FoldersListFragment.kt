@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.databinding.FragmentFoldersListBinding
@@ -23,17 +24,17 @@ class FoldersListFragment : Fragment(),FoldersCallBack {
     private var adapter: FoldersListAdapter? = null
 
 
-    override fun onResume() {
-        super.onResume()
-        binding.foldersListRecycler.adapter = FoldersListAdapter(DashboardFragment.foldersModelList,this)
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        binding.foldersListRecycler.adapter = FoldersListAdapter(DashboardFragment.foldersList,this)
+//    }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+
         binding = FragmentFoldersListBinding.inflate(inflater, container, false)
 
-
-        adapter= FoldersListAdapter(DashboardFragment.foldersModelList,this)
+        adapter= FoldersListAdapter(DashboardFragment.foldersList,this)
 
 
         binding.foldersListRecycler.adapter = adapter
@@ -73,7 +74,7 @@ class FoldersListFragment : Fragment(),FoldersCallBack {
                     if (!tempFoldersList.contains(foldersName)){
                         tempFoldersList.add(foldersName)
                         val foldersModel=FoldersModel(foldersId,foldersName)
-                        DashboardFragment.foldersModelList.add(foldersModel)
+                        DashboardFragment.foldersList.add(foldersModel)
 //                        Log.d(Constants.TAG,"folders list$folders")
                     }
                 }
@@ -85,10 +86,13 @@ class FoldersListFragment : Fragment(),FoldersCallBack {
     }
 
 
-
     override fun itemClicked(foldersModel: FoldersModel, position: Int) {
 
-         findNavController().navigate(R.id.action_dashboard_fragment_to_songsByFolderFragment)
+           val action=DashboardFragmentDirections.actionDashboardFragmentToSongsByFolderFragment(position)
+
+            Navigation.findNavController(binding.root).navigate(action)
+
+//         findNavController().navigate(R.id.action_dashboard_fragment_to_songsByFolderFragment)
 
     }
 

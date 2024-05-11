@@ -7,12 +7,11 @@ import com.example.musicplayer.databinding.FoldersListAdapterBinding
 
 class FoldersListAdapter(
 
-    private var foldersModelListAdapter: ArrayList<FoldersModel>,
-    private val options: FoldersCallBack,
+    private var foldersListAdapter: ArrayList<FoldersModel>,
+    private val callBack: FoldersListFragment,
 
 
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -24,7 +23,7 @@ class FoldersListAdapter(
 
     override fun getItemCount(): Int {
 
-        return foldersModelListAdapter.size
+        return foldersListAdapter.size
     }
 
     class ItemViewHolder(val binding: FoldersListAdapterBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -32,22 +31,21 @@ class FoldersListAdapter(
     }
 
 
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder as ItemViewHolder
 
-        holder.binding.foldersName.text=foldersModelListAdapter[position].name
+        holder.binding.foldersName.text=foldersListAdapter[position].name
 
 
         holder.binding.root.setOnClickListener()
         {
 
-            options.itemClicked(foldersModelListAdapter[position],position)
+            callBack.itemClicked(foldersListAdapter[position],position)
         }
 
         holder.binding.folderMenuOptions.setOnClickListener(){
 
-            options.menuItemClicked(foldersModelListAdapter[position],position)
+            callBack.menuItemClicked(foldersListAdapter[position],position)
         }
 
     }

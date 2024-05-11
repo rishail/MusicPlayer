@@ -9,12 +9,11 @@ import com.example.musicplayer.databinding.SongsByFolderAdapterBinding
 
 class SongsByFolderAdapter(
 
-    private var songsByFolderAdapter: ArrayList<MusicModel>,
-    private val options: SongsByFolderFragment,
+    private var songsByFolderAdapter: ArrayList<SongsByFolderModel>,
+    private val callback: SongsByFolderFragment,
     private val context: Context,
 
     ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -23,23 +22,22 @@ class SongsByFolderAdapter(
         return ItemViewHolder(binding)
     }
 
-
     override fun getItemCount(): Int {
 
         return songsByFolderAdapter.size
     }
 
-    class ItemViewHolder(val binding: SongsByFolderAdapterBinding) : RecyclerView.ViewHolder(binding.root) {
-
-    }
-
+    class ItemViewHolder(val binding: SongsByFolderAdapterBinding) : RecyclerView.ViewHolder(binding.root)
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder as ItemViewHolder
 
-        holder.binding.songName.text=songsByFolderAdapter[position].title
-        holder.binding.artistName.text=songsByFolderAdapter[position].artist
+        val currentItem = songsByFolderAdapter[position]
+
+
+        holder.binding.songName.text=currentItem.title
+        holder.binding.artistName.text=currentItem.artist
 
 
         Glide.with(context)
@@ -49,16 +47,23 @@ class SongsByFolderAdapter(
         holder.binding.root.setOnClickListener()
         {
 
-            options.itemClicked(songsByFolderAdapter[position],position)
+            callback.itemClicked(songsByFolderAdapter[position],position)
         }
 
         holder.binding.songMenuOptions.setOnClickListener(){
 
-            options.menuItemClicked(songsByFolderAdapter[position],position)
+            callback.menuItemClicked(songsByFolderAdapter[position],position)
 
         }
 
     }
+
+    fun updateData(newData: ArrayList<SongsByFolderModel>) {
+        songsByFolderAdapter.clear()
+        songsByFolderAdapter.addAll(newData)
+        notifyDataSetChanged()
+    }
+
 
 
 }
